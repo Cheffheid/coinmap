@@ -1,0 +1,43 @@
+<div ui-map="coinMap" class="map"
+  ui-event="{}"
+  ui-options="mapOptions">
+</div>
+<div class="quarter-list">
+    <div class="search-filter-wrap">
+        Filter: <input ng-model="query">
+        Sort by:
+        <select ng-model="orderProp">
+            <option value="name">Name</option>
+            <option value="year">Year</option>
+        </select>
+    </div>
+    <h2>State Quarters</h2>
+    <ol class="state-quarters clearfix">
+        <li ng-repeat="quarter in stateCoins | filter:query | orderBy:orderProp">
+            <input type="checkbox" ng-model="quarter.collected" ng-click="saveCoin(quarter.id, quarter.collected)" />
+            <span class="collected-{{quarter.collected}}" ng-init="addMarker(quarter)">
+                <a ng-click="panMap(quarter)">{{quarter.name}} ({{quarter.year}})</a>
+            </span>
+        </li>
+    </ol>
+    <h2>Territory Quarters</h2>
+    <ol class="territory-quarters clearfix">
+        <li ng-repeat="quarter in territoryCoins | filter:query | orderBy:orderProp">
+            <input type="checkbox" ng-model="quarter.collected" ng-click="saveCoin(quarter.id, quarter.collected)" />
+            <span class="collected-{{quarter.collected}}" ng-init="addMarker(quarter)">
+                <a ng-click="panMap(quarter)">{{quarter.name}} ({{quarter.year}})</a>
+            </span>
+        </li>
+    </ol>
+    <h2>America the Beautiful Quarters</h2>
+    <ol class="park-quarters clearfix">
+        <li ng-repeat="quarter in americaTheBeautifulCoins | filter:query | orderBy:orderProp">
+            <input type="checkbox" ng-model="quarter.collected" ng-click="saveCoin(quarter.id, quarter.collected)" />
+            <span class="collected-{{quarter.collected}}" ng-init="addMarker(quarter)">
+                <a ng-click="panMap(quarter)">{{quarter.name}} ({{quarter.year}})</a>
+            </span>
+        </li>
+    </ol>
+</div>
+<footer>
+    <small>Quarter-dollar coin images from the United States Mint.</small>
