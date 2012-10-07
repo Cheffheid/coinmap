@@ -23,7 +23,40 @@ coinMap.controller('MainCtrl', function ($scope) {
 
         return windowContent;
     };
-
+    
+    // Helper function to help set a marker's icon
+    var generateIconImage = function (collected) {
+        var markerIcon = 'images/marker-default.png'; // create default marker variable
+    
+        if (collected === true) {
+            markerIcon = 'images/marker-green.png'; // overwrite it if the coin is collected
+        }
+        
+        // create a new MarkerImage object with the markerIcon set above
+        var pinImage = new google.maps.MarkerImage(
+                            markerIcon,
+                            new google.maps.Size(21, 34),
+                            new google.maps.Point(0,0),
+                            new google.maps.Point(10, 34)
+                        );
+                        
+        return pinImage;
+    };
+    
+    // helper function to help set the icon's shadow
+    var generateIconShadow = function () {
+        var markerShadow = 'images/marker-shadow.png'; // the image for the shadow
+        
+        // create a new MarkerImage object that holds said shadow image
+        var pinShadow = new google.maps.MarkerImage(
+                            markerShadow,
+                            new google.maps.Size(40, 37),
+                            new google.maps.Point(0, 0),
+                            new google.maps.Point(12, 35)
+                        );
+        return pinShadow;        
+    };
+    
     // Default array of 50 state quarters
     var stateCoins = [
         { "id": 0, "name": "Delaware", "state": "Delaware", "year": 1999, "image": "delaware.png", "collected": false, "lat": 38.910833, "lng": -75.52767 },
@@ -135,7 +168,13 @@ coinMap.controller('MainCtrl', function ($scope) {
 
     // Save the collected status of the coin
     $scope.saveCoin = function(id, collected) {
+    
+        // Save it to localStorage
         localStorage['coin_' + id] = collected;
+        
+        // Change the icon on the map
+        $scope.myMarkers[id].setIcon(generateIconImage(collected));
+        
     }
 
     // Empty markers array
@@ -151,10 +190,15 @@ coinMap.controller('MainCtrl', function ($scope) {
     // Add marker function, gets called for each coin in the arrays
     $scope.addMarker = function(coin) {
         var GLatLng = new google.maps.LatLng(coin.lat, coin.lng);
+        
         var marker = new google.maps.Marker({
             map: $scope.coinMap,
-            position: GLatLng
+            position: GLatLng,
+            icon: generateIconImage(coin.collected),
+            shadow: generateIconShadow()
         });
+        
+
 
         // Add the marker into an array for reference
         $scope.myMarkers.push(marker);
@@ -174,9 +218,13 @@ coinMap.controller('MainCtrl', function ($scope) {
     $scope.panMap = function(coin) {
         if (infowindow) { infowindow.close(); } // Close any InfoWindows that may be open
 
-        var GLatLng = new google.maps.LatLng(coin.lat, coin.lng); // Create LatLng object
-        $scope.coinMap.panTo(GLatLng); // Center the map to the coin's latitude/longitude
-        $scope.coinMap.setZoom(7); // Zoom in some
+        // commented out to let autopan do the work, for now
+        //var GLatLng = new google.maps.LatLng(coin.lat, coin.lng); // Create LatLng object
+        //$scope.coinMap.panTo(GLatLng); // Center the map to the coin's latitude/longitude
+        
+        if ( $scope.coinMap.getZoom() < 7 ) {
+            $scope.coinMap.setZoom(7); // Zoom in some, but only if we're not zoomed in already
+        }
 
         var windowContent = generateInfoContent(coin); // Generate bubble content
 
