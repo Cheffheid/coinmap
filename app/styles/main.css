@@ -31,3 +31,13 @@ body { background-color: #E3E3E3; font-size: 75%; }
 .quarter-list .territory-quarters li, .quarter-list .park-quarters li { width: 33%; float: left; }
 .quarter-list h2 { font-size: 90%; }
 .quarter-list span.collected-true { color: #777777; text-decoration: line-through; }
+
+div.warning, div.error { border: 1px solid; margin: 10px 0px; padding: 15px 10px 15px 50px; text-align: center; }
+
+div.warning { color: #9F6000; background-color: #FEEFB3; }
+
+div.error { color: #D8000C; background-color: #FFBABA; }
+
+.localstorage #noLS { display: none; }
+
+.no-js #noLS { display: none; }
